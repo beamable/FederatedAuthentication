@@ -47,16 +47,16 @@ In this example we didn't use the "challenge" and "solution" arguments. Standard
 
 ## 5. CLIENT: Attach an external identity to a player
 ```csharp
+var client = new AuthenticationMicroserviceClient(BeamContext.Default);
 var tunaAuthCode = await TunaService.GetAuthCode();
-var authService = BeamContext.Default.Api.AuthService;
-var attachResponse = await authService.AttachIdentity(tunaAuthCode, "AuthenticationMicroservice", "tuna");
+var attachResponse = await await client.AttachIdentity(tunaAuthCode);
 ```
 
 ## 6. CLIENT: Login using an external identity
 ```csharp
+var client = new AuthenticationMicroserviceClient(BeamContext.Default);
 var tunaAuthCode = await TunaService.GetAuthCode();
-var authService = BeamContext.Default.Api.AuthService;
-var attachResponse = await authService.LoginExternal(tunaAuthCode, "AuthenticationMicroservice", "tuna");
+var attachResponse = await authService.AuthorizeExternalIdentity(tunaAuthCode);
 ```
 
 # Beamable provided examples
