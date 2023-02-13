@@ -8,15 +8,14 @@ namespace Beamable.Common
     {
         public static Task<TunaResponse> GetUserByAuthorizationCode(string authorizationCode)
         {
-            // External user id has a corresponding tuna that matches the SHA256 hash of the input token  
-            using (SHA256 hash = SHA256.Create())
+            // We will just hash the auth code to get the external user id, for demo purposes.
+            // You would interact with some external system in real-world scenarios.
+            using var hash = SHA256.Create();
+            byte[] bytes = hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(authorizationCode));
+            return Task.FromResult(new TunaResponse
             {
-                byte[] bytes = hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(authorizationCode));
-                return Task.FromResult(new TunaResponse
-                {
-                    userId = BitConverter.ToString(bytes).Replace("-", "").ToLower()
-                });
-            }
+                userId = BitConverter.ToString(bytes).Replace("-", "").ToLower()
+            });
         }
 
         public static string GetAuthorizationCode()
