@@ -2,30 +2,30 @@
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 
-namespace Beamable.Microservices.AuthenticationMicroservice
+namespace Beamable.Common
 {
-    internal static class TunaService
+    public class TunaService
     {
-        public static Task<TunaResponse> GetUserByAuthorizationCode(string token)
+        public static Task<TunaResponse> GetUserByAuthorizationCode(string authorizationCode)
         {
-            if (string.IsNullOrEmpty(token))
-            {
-                throw new UnauthorizedException();
-            }
-
             // External user id has a corresponding tuna that matches the SHA256 hash of the input token  
             using (SHA256 hash = SHA256.Create())
             {
-                byte[] bytes = hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(token));
+                byte[] bytes = hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(authorizationCode));
                 return Task.FromResult(new TunaResponse
                 {
                     userId = BitConverter.ToString(bytes).Replace("-", "").ToLower()
                 });
             }
         }
-    }
 
-    internal class TunaResponse
+        public static string GetAuthorizationCode()
+        {
+            return "big-blue-tuna";
+        }
+    }
+    
+    public class TunaResponse
     {
         public string userId;
     }
