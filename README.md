@@ -12,7 +12,7 @@ You should first create a microservice or use an existing one.
 *NOTE: You can bundle multiple authentication federations in a single microservice using namespaces (more on this below).*
 
 ## 2. Implement an IThirdPartyCloudIdentity interface
-Create an implementation of *IThirdPartyCloudIdentity* somwhere in **Beamable/Common**.  
+Create an implementation of *IThirdPartyCloudIdentity* in **Beamable/Common** (or any shared assembly).  
 This will create a "tuna" namespace for your new authentication scheme. Namespace will be a part of the authentication endpoint path.   
 E.g. */your_microservice/tuna/atuhenticate*
 
@@ -57,8 +57,9 @@ var response = await ctx.Accounts
 ```csharp
 var ctx = BeamContext.Default;
 var tunaAuthCode = await TunaService.GetAuthorizationCode();
-var response = await ctx.Accounts
+var accountRecoveryResponse = await ctx.Accounts
   .RecoverAccountWithExternalIdentity<TunaCloudIdentity, AuthenticationMicroserviceClient>(tunaAuthCode);
+await accountRecoveryResponse.SwitchToAccount();
 ```
 
 # Beamable provided examples

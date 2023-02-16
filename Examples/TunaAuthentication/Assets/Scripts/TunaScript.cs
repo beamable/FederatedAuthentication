@@ -13,9 +13,7 @@ public class TunaScript : MonoBehaviour
 
     async void Start()
     {
-        var ctx = BeamContext.Default;
-
-        await ctx.OnReady;
+        var ctx = await BeamContext.Default.Instance;
         await ctx.Accounts.OnReady;
 
         _attachIdentityButton.onClick.AddListener(OnAttachClicked);
@@ -31,18 +29,25 @@ public class TunaScript : MonoBehaviour
         var tunaAuthCode = TunaService.GetAuthorizationCode();
         var response = await ctx.Accounts
             .AddExternalIdentity<TunaCloudIdentity, AuthenticationMicroserviceClient>(tunaAuthCode);
-        Debug.Log($"Is success: {response.isSuccess}, Tuna ID: {response.account.ExternalIdentities.First().userId}");
+        Debug.Log($"Is success: {response.isSuccess}");
     }
 
     private async void OnAuthorizeClicked()
     {
         var ctx = BeamContext.Default;
-
-        Debug.Log("Authorizing...");
-        var tunaAuthCode = TunaService.GetAuthorizationCode();
-        var response = await ctx.Accounts
-            .RecoverAccountWithExternalIdentity<TunaCloudIdentity, AuthenticationMicroserviceClient>(tunaAuthCode);
-        Debug.Log($"Is success: {response.isSuccess}");
+        if (!ctx.Accounts.Current.ExternalIdentities.Any())
+        {
+            Debug.Log("No external identity attached");
+        }
+        else
+        {
+            Debug.Log("Authorizing...");
+            var tunaAuthCode = TunaService.GetAuthorizationCode();
+            var accountRecoveryResponse = await ctx.Accounts
+                .RecoverAccountWithExternalIdentity<TunaCloudIdentity, AuthenticationMicroserviceClient>(tunaAuthCode);
+            Debug.Log($"Is success: {accountRecoveryResponse.isSuccess}");
+            await accountRecoveryResponse.SwitchToAccount();            
+        }
     }
 
     private void OnListExternalIdentitiesClicked()

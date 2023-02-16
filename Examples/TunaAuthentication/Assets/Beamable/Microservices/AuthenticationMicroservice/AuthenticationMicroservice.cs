@@ -16,6 +16,7 @@ namespace Beamable.Microservices.AuthenticationMicroservice
                 throw new UnauthorizedException();
             }
 
+            BeamableLogger.Log("User ID: {tuna}", tunaUserResponse.userId);
             return new FederatedAuthenticationResponse { user_id = tunaUserResponse.userId };
         }
     }
