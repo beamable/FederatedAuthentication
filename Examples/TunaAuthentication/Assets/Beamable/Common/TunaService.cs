@@ -1,27 +1,28 @@
 ﻿using System;
-using System.Security.Cryptography;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Beamable.Common
 {
     public class TunaService
     {
+        private static readonly Random Random = new Random();
+        private static readonly IDictionary<int, string> Tunas = new Dictionary<int, string>()
+        {
+            { 1, "big blue tuna" },
+            { 2, "funky tuna" },
+            { 3, "yellow tuna" }
+        }; 
+    
         public static Task<TunaResponse> GetUserByAuthorizationCode(string authorizationCode)
         {
-            // We will just hash the auth code to get the external user id, for demo purposes.
-            // You would interact with some external system in real-world scenarios.
-            using var hash = SHA256.Create();
-            byte[] bytes = hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(authorizationCode));
             return Task.FromResult(new TunaResponse
             {
-                userId = BitConverter.ToString(bytes).Replace("-", "").ToLower()
+                userId = Tunas[Convert.ToInt32(authorizationCode)]
             });
         }
 
-        public static string GetAuthorizationCode()
-        {
-            return "big-blue-tuna";
-        }
+        public static string GetAuthorizationCode() => Random.Next(1, 3).ToString();
     }
     
     public class TunaResponse
