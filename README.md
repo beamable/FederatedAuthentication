@@ -41,7 +41,7 @@ public class AuthenticationMicroservice : IFederatedLogin<TunaCloudIdentity>
   }
 }
 ```
-In this example we didn't use the "challenge" and "solution" arguments. Standard use-case for challenges are wallet authentication. If a client sends us a wallet address as a token, the only way to verify the ownership of that wallet is to issue a challenge and require a user to sign that challege using his private key. [Solana/Phantom wallet authentication](https://github.com/beamable/solana-example) is an example that uses a challenge.
+In this example we didn't use the "challenge" and "solution" arguments. Standard use-case for challenges is wallet authentication. If a client sends us a wallet address as a token, the only way to verify the ownership of that wallet is to issue a challenge, and require a user to sign that challege using his private key. [Solana/Phantom wallet authentication](https://github.com/beamable/solana-example) is an example that uses a challenge.
 
 ## 4. Publich your microservice
 
