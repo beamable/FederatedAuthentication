@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Beamable;
 using Beamable.Common;
@@ -11,6 +12,8 @@ public class TunaScript : MonoBehaviour
     [SerializeField] private Button _authorizeButton;
     [SerializeField] private Button _listExternalIdentitiesButton;
 
+    private string _authorizationCode;
+
     async void Start()
     {
         var ctx = await BeamContext.Default.Instance;
@@ -19,6 +22,7 @@ public class TunaScript : MonoBehaviour
         _attachIdentityButton.onClick.AddListener(OnAttachClicked);
         _authorizeButton.onClick.AddListener(OnAuthorizeClicked);
         _listExternalIdentitiesButton.onClick.AddListener(OnListExternalIdentitiesClicked);
+        _authorizationCode = Guid.NewGuid().ToString();
     }
 
     private async void OnAttachClicked()
@@ -26,9 +30,8 @@ public class TunaScript : MonoBehaviour
         var ctx = BeamContext.Default;
 
         Debug.Log("Attaching...");
-        var tunaAuthCode = TunaService.GetAuthorizationCode();
         var response = await ctx.Accounts
-            .AddExternalIdentity<TunaCloudIdentity, AuthenticationMicroserviceClient>(tunaAuthCode);
+            .AddExternalIdentity<TunaCloudIdentity, AuthenticationMicroserviceClient>(_authorizationCode);
         Debug.Log($"Is success: {response.isSuccess}");
     }
 
@@ -42,9 +45,8 @@ public class TunaScript : MonoBehaviour
         else
         {
             Debug.Log("Authorizing...");
-            var tunaAuthCode = TunaService.GetAuthorizationCode();
             var accountRecoveryResponse = await ctx.Accounts
-                .RecoverAccountWithExternalIdentity<TunaCloudIdentity, AuthenticationMicroserviceClient>(tunaAuthCode);
+                .RecoverAccountWithExternalIdentity<TunaCloudIdentity, AuthenticationMicroserviceClient>(_authorizationCode);
             Debug.Log($"Is success: {accountRecoveryResponse.isSuccess}");
             await accountRecoveryResponse.SwitchToAccount();            
         }

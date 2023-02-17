@@ -48,17 +48,15 @@ In this example we didn't use the "challenge" and "solution" arguments. Standard
 ## 5. CLIENT: Attach an external identity to a player
 ```csharp
 var ctx = BeamContext.Default;
-var tunaAuthCode = await TunaService.GetAuthorizationCode();
 var response = await ctx.Accounts
-  .AddExternalIdentity<TunaCloudIdentity, AuthenticationMicroserviceClient>(tunaAuthCode);
+  .AddExternalIdentity<TunaCloudIdentity, AuthenticationMicroserviceClient>(_authorizationCode);
 ```
 
 ## 6. CLIENT: Login using an external identity
 ```csharp
 var ctx = BeamContext.Default;
-var tunaAuthCode = await TunaService.GetAuthorizationCode();
 var accountRecoveryResponse = await ctx.Accounts
-  .RecoverAccountWithExternalIdentity<TunaCloudIdentity, AuthenticationMicroserviceClient>(tunaAuthCode);
+  .RecoverAccountWithExternalIdentity<TunaCloudIdentity, AuthenticationMicroserviceClient>(_authorizationCode);
 await accountRecoveryResponse.SwitchToAccount();
 ```
 
