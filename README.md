@@ -1,4 +1,4 @@
-# FederatedAuthentication
+# Federated Authentication
 Beamable supports custom authentication federation using managed [microservices](https://docs.beamable.com/docs/microservices-feature-overview). You can use this feature to implement an OAuth2, OpenID Connect or a custom external authententication provider and use it with Beamable. We also support two-way chellenge-based flows for PKI based authentication for Web3/blockchain scenarios.  
   
 Some use cases:
